@@ -27,7 +27,7 @@ $getTrackerId = Mage::helper('ntoklo_recommendations')->getWidgetType();
         <div class="nt_wrapper nt_grid nt_orange nt_<?php echo $_columnCount ?>_column">
             <p class="nt_header"><?php echo $this->getHeader() ?></p>
             <div class="nt_widget clearfix">
-                <?php $i=0; foreach ($_products as $_product): ?>
+                <?php $i=0; foreach ($_products as $_product):?>
                     <?php if ($i++%$_columnCount==0): ?>
                         <div class="nt_row clearfix">
                     <?php endif ?>
@@ -36,7 +36,7 @@ $getTrackerId = Mage::helper('ntoklo_recommendations')->getWidgetType();
                                     <a href="<?php echo Mage::getUrl($_product->getUrlPath(), array('_query'=>array($getTrackerId =>  Mage::helper('ntoklo_recommendations')->getTrackerId())))?>" class="ntoklo_conversion"><img src="<?php echo $this->helper('catalog/image')->init($_product, 'thumbnail')->resize(100) ?>" alt="<?php echo $this->htmlEscape($_product->getName()) ?>"></a>
                                 </div>
                                 <span class="nt_product_title"><?php echo $this->htmlEscape($_product->getName()) ?></span>
-                                <span class="nt_product_price"><?php echo Mage::helper('core')->currency($_product->getPrice()); ?></span>
+                                <span class="nt_product_price"><?php echo Mage::helper('core')->currency($_product->getFinalPrice()); ?></span>
                                 <a href="<?php echo Mage::getUrl($_product->getUrlPath(), array('_query'=>array($getTrackerId =>  Mage::helper('ntoklo_recommendations')->getTrackerId())))?>" class="nt_btn">
                                     <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="10.853px" height="11.229px" viewBox="0 0 10.853 11.229" enable-background="new 0 0 10.853 11.229" xml:space="preserve">
                                             <g>
