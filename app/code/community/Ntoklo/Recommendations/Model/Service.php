@@ -154,7 +154,6 @@ class Ntoklo_Recommendations_Model_Service extends Mage_Core_Model_Abstract {
                 }
                 break;
             case self::CALL_METHOD_RECOMMENDATIONS:
-           
                 if (array_key_exists('items', $response)) {
                     foreach ($response['items'] as $item) {
 			Mage::helper('ntoklo_recommendations')->setTrackerId($response['tracker_id'], $chart->getData('widget_type'));

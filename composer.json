@@ -1,12 +1,12 @@
 {
     "name": "OpenMageModuleFostering/ntoklo_recommendations",
     "type": "magento-module",
-    "license": "open-software-license",
+    "license": "open-sofetware-license",
     "homepage": "",
     "description": "Displays personalised product recommendations and trending product charts through nToklo for retail platform. ",
     "authors": [
     {
-        "name": "Fu",
+        "name": "nToklo",
         "email": "fu.hoang@ntoklo.com"
     }
 ],

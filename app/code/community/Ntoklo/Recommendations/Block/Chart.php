@@ -84,7 +84,7 @@ class Ntoklo_Recommendations_Block_Chart extends Mage_Catalog_Block_Product_Abst
                     ->addAttributeToFilter('status', Mage_Catalog_Model_Product_Status::STATUS_ENABLED)
                     ->setPageSize($limit ? $limit : 6);
 
-        Mage::getModel('cataloginventory/stock')->addInStockFilterToCollection($collection);
+       //Mage::getModel('cataloginventory/stock')->addInStockFilterToCollection($collection);
 
         // Load parent product if possible if product is not visible individually
         /** @var $item Mage_Catalog_Model_Product */

@@ -249,11 +249,7 @@ class Ntoklo_Recommendations_Helper_Data extends Mage_Core_Helper_Abstract {
             ));
 				
 	array_push($object, $item);
-	
-	
-	
-	
-       
+
             $tracker_id = Mage::helper('ntoklo_recommendations')->getTrackerId();
             // Recommendation click events
             if (!empty($_GET['nt_chrt'])) {
@@ -397,9 +393,10 @@ class Ntoklo_Recommendations_Helper_Data extends Mage_Core_Helper_Abstract {
         if ($this->getPageCategory() == self::PAGE_CATEGORY_CATEGORY) {
             $query = $this->getCategoryPath();
         }
-        
-        
+
         $pathCategory = $this->getCategoryPath();
+
+       // print_r($pageCategory);
         $last = count($pathCategory) - 1;
 
         // Build Items part - search context
@@ -417,7 +414,11 @@ class Ntoklo_Recommendations_Helper_Data extends Mage_Core_Helper_Abstract {
         if ($items) {
             $object = new Ntoklo_Recommendations_Model_UniversalVariable();
             $object->setProperties(array('query' => $query));
-            $object->items = $items;
+
+            for ($i=0; $i<count($items) && $i < 5; $i++) {                
+                //$items = $items[$i];
+                $object->items[$i] = $items[$i];
+            }
         }
 
         return $object;
@@ -452,8 +453,8 @@ class Ntoklo_Recommendations_Helper_Data extends Mage_Core_Helper_Abstract {
             'unit_price'        => (float) $product->getPrice(),
             'unit_sale_price'   => (float) $product->getFinalPrice(),
             'currency'          => Mage::app()->getStore()->getCurrentCurrencyCode(),
-            'description'       => $product->getShortDescription(),
-            'stock'             => (int) Mage::getModel('cataloginventory/stock_item')->loadByProduct($product)->getQty()
+            'description'       => $product->getShortDescription()
+            //'stock'             => (int) Mage::getModel('cataloginventory/stock_item')->loadByProduct($product)->getQty()
         ));
 
 	if($category){
@@ -664,13 +665,13 @@ class Ntoklo_Recommendations_Helper_Data extends Mage_Core_Helper_Abstract {
 	
 	public function getWidgetType(){
 	
-		if($this->widget_type == 'recommendation'){
-			return 'nt_rec';
-		}
-		
-		if($this->widget_type){
-			return 'nt_chrt';
-		}
+        if($this->widget_type == 'recommendation'){
+            return 'nt_rec';
+        }
+
+        if($this->widget_type == 'chart'){
+            return 'nt_chrt';
+        }
 	
-	}	
+    }
 }
