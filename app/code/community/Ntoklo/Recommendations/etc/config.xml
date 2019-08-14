@@ -20,7 +20,7 @@
 <config>
     <modules>
         <Ntoklo_Recommendations>
-            <version>1.0.9</version>
+            <version>1.1.0</version>
         </Ntoklo_Recommendations>
     </modules>
     <global>

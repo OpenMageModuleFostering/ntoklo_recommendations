@@ -44,6 +44,7 @@
                     </widget_type>
                 </depends>
             </widget_type_helper>
+
             <header_recommendations translate="label description">
                 <label>Header</label>
                 <visible>1</visible>
@@ -57,6 +58,7 @@
                     </widget_type>
                 </depends>
             </header_recommendations>
+
             <header_chart translate="label description">
                 <label>Header</label>
                 <visible>1</visible>
@@ -70,6 +72,7 @@
                     </widget_type>
                 </depends>
             </header_chart>
+
             <time_window translate="label description">
                 <label>Time Window</label>
                 <visible>1</visible>
@@ -109,6 +112,34 @@
                     <!--</widget_type>-->
                 <!--</depends>-->
             <!--</start_date>-->
+            <widget_color_chart translate="label description">
+                <label>Widget color</label>
+                <visible>1</visible>
+                <required>1</required>
+                <type>text</type>
+                <description><![CDATA[Insert your web hex color to change the widget color for eg. #d15915.]]></description>
+                <value>#d15915</value>
+                <depends>
+                    <widget_type>
+                        <value>chart</value>
+                    </widget_type>
+                </depends>
+            </widget_color_chart>
+
+            <widget_color_recommendations translate="label description">
+                <label>Widget color</label>
+                <visible>1</visible>
+                <required>1</required>
+                <type>text</type>
+                <description><![CDATA[Insert your web hex color to change the widget color eg. #d15915.]]></description>
+                <value>#d15915</value>
+                <depends>
+                    <widget_type>
+                        <value>recommendation</value>
+                    </widget_type>
+                </depends>
+            </widget_color_recommendations>
+
             <max_products translate="label description">
                 <label>Max products</label>
                 <description><![CDATA[Limits the number of products displayed in the widget.]]></description>
@@ -117,6 +148,7 @@
                 <type>text</type>
                 <value>4</value>
             </max_products>
+            
             <column_count translate="label description">
                 <label>Column count</label>
                 <description><![CDATA[The number of columns used when displaying in <strong>nToklo Grid Template</strong>.]]></description>

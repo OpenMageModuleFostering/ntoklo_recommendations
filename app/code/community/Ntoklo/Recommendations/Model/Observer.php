@@ -77,6 +77,7 @@ class Ntoklo_Recommendations_Model_Observer {
                 'widget_type' => 'recommendation',
                 'widget_type_helper' => '',
                 'header_recommendations' => 'Recommendations',
+                'widget_color_recommendations' => '#d15915',
                 'max_products' => '4',
                 'column_count' => '4',
                 'cache_lifetime' => ''
@@ -112,6 +113,7 @@ class Ntoklo_Recommendations_Model_Observer {
                 'widget_type' => 'chart',
                 'widget_type_helper' => '',
                 'header_chart' => 'Trending Products',
+                'widget_color_chart' => '#d15915',
                 'time_window' => "DAILY",
                 'max_products' => '4',
                 'column_count' => '2',

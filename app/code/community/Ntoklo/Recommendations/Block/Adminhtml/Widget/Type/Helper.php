@@ -31,7 +31,8 @@ class Ntoklo_Recommendations_Block_Adminhtml_Widget_Type_Helper extends Mage_Adm
     }
 
     protected function _toHtml() {
-        return Mage::helper('ntoklo_recommendations')->__('<b style="color:red">Note:</b> A chart is non-personalised.  If you place the chart on a Category based page then the chart will reflect the trending products for that category.  However, if you put a chart widget on a non-category based page, like the Home page for example, then the chart will show trending products from your whole product catalogue.');
+        $html  = Mage::helper('ntoklo_recommendations')->__('<b style="color:red">Note:</b> A chart is non-personalised.  If you place the chart on a Category based page then the chart will reflect the trending products for that category.  However, if you put a chart widget on a non-category based page, like the Home page for example, then the chart will show trending products from your whole product catalogue.');
+        return $html;    
     }
 
 }

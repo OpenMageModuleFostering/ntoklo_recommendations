@@ -130,6 +130,14 @@ class Ntoklo_Recommendations_Block_Chart extends Mage_Catalog_Block_Product_Abst
     }
 
     /**
+     * Returns the widget color to be used on frontend
+     * @return string
+     */
+    public function getWidgetColor() {
+        return ($this->getData('widget_type') == Ntoklo_Recommendations_Model_Service::CALL_METHOD_CHART) ? $this->getData('widget_color_chart') : $this->getData('widget_color_recommendations');
+    }
+
+    /**
      * @return array
      */
     public function getItems() {
