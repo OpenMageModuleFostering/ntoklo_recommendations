@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * nToklo
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @category   Ntoklo
+ * @package    Ntoklo_Recommendations
+ * @copyright  Copyright (c) 2013 nToklo (http://ntoklo.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @author     nToklo
+ */
+-->
+
+<widgets>
+    <ntoklo_recommendations_chart type="ntoklo_recommendations/chart" translate="name description" module="ntoklo_recommendations">
+        <name>nToklo</name>
+        <description type="desc"><![CDATA[Outputs nToklo recommended products.]]></description>
+        <parameters>
+            <widget_type translate="label">
+                <label>Widget type</label>
+                <visible>1</visible>
+                <required>1</required>
+                <type>select</type>
+                <source_model>ntoklo_recommendations/widget_type</source_model>
+                <value>recommendation</value>
+            </widget_type>
+            <widget_type_helper translate="label">
+                <visible>1</visible>
+                <required>0</required>
+                <type>label</type>
+                <helper_block>
+                    <type>ntoklo_recommendations/adminhtml_widget_type_helper</type>
+                </helper_block>
+                <depends>
+                    <widget_type>
+                        <value>chart</value>
+                    </widget_type>
+                </depends>
+            </widget_type_helper>
+            <header_recommendations translate="label description">
+                <label>Header</label>
+                <visible>1</visible>
+                <required>0</required>
+                <type>text</type>
+                <description><![CDATA[Widget's header been displayed on the page.]]></description>
+                <value><![CDATA[Recommended For You]]></value>
+                <depends>
+                    <widget_type>
+                        <value>recommendation</value>
+                    </widget_type>
+                </depends>
+            </header_recommendations>
+            <header_chart translate="label description">
+                <label>Header</label>
+                <visible>1</visible>
+                <required>0</required>
+                <type>text</type>
+                <description><![CDATA[Widget's header been displayed on the page.]]></description>
+                <value><![CDATA[Trending Products]]></value>
+                <depends>
+                    <widget_type>
+                        <value>chart</value>
+                    </widget_type>
+                </depends>
+            </header_chart>
+            <time_window translate="label description">
+                <label>Time Window</label>
+                <visible>1</visible>
+                <required>1</required>
+                <type>select</type>
+                <description><![CDATA[The time window for which the charts are requested.]]></description>
+                <values>
+                    <daily translate="label">
+                        <value>DAILY</value>
+                        <label>Daily</label>
+                    </daily>
+                    <weekly>
+                        <value>WEEKLY</value>
+                        <label>Weekly</label>
+                    </weekly>
+                </values>
+                <value>DAILY</value>
+                <depends>
+                    <widget_type>
+                        <value>chart</value>
+                    </widget_type>
+                </depends>
+            </time_window>
+            <!--Commented out per Paolo's request 21 May 2013-->
+            <!--<start_date translate="label description">-->
+                <!--<label>Start Date</label>-->
+                <!--<visible>1</visible>-->
+                <!--<required>0</required>-->
+                <!--<description><![CDATA[Use recommendations data starting with this date. Leave blank for default.]]></description>-->
+                <!--<type>label</type>-->
+                <!--<helper_block>-->
+                    <!--<type>ntoklo_recommendations/adminhtml_widget_date_helper</type>-->
+                <!--</helper_block>-->
+                <!--<depends>-->
+                    <!--<widget_type>-->
+                        <!--<value>chart</value>-->
+                    <!--</widget_type>-->
+                <!--</depends>-->
+            <!--</start_date>-->
+            <max_products translate="label description">
+                <label>Max products</label>
+                <description><![CDATA[Limits the number of products displayed in the widget.]]></description>
+                <visible>1</visible>
+                <required>1</required>
+                <type>text</type>
+                <value>4</value>
+            </max_products>
+            <column_count translate="label description">
+                <label>Column count</label>
+                <description><![CDATA[The number of columns used when displaying in <strong>nToklo Grid Template</strong>.]]></description>
+                <visible>1</visible>
+                <required>0</required>
+                <type>text</type>
+                <value>4</value>
+            </column_count>
+            <cache_lifetime translate="label description">
+                <label>Cache lifetime</label>
+                <description><![CDATA[86400 by default, if not set. To refresh instantly, Clear the Blocks HTML Output Cache.]]></description>
+                <visible>1</visible>
+                <type>text</type>
+            </cache_lifetime>
+            <!--Commented out per Anton's request 29 May 2013-->
+            <!--<debug translate="label description">-->
+                <!--<label>Debug</label>-->
+                <!--<description><![CDATA[Turn this ON to force logging of API call and set the first 4 products from catalog as API response to test the look and feel of the widget.]]></description>-->
+                <!--<visible>1</visible>-->
+                <!--<required>0</required>-->
+                <!--<type>select</type>-->
+                <!--<source_model>adminhtml/system_config_source_yesno</source_model>-->
+                <!--<value>0</value>-->
+            <!--</debug>-->
+            <template translate="label">
+                <label>Frontend Template</label>
+                <visible>1</visible>
+                <required>1</required>
+                <type>select</type>
+                <values>
+                    <vertical translate="label">
+                        <value>ntoklo/recommendations/widget/chart_vertical.phtml</value>
+                        <label>nToklo Column Template</label>
+                    </vertical>
+                    <landscape translate="label">
+                        <value>ntoklo/recommendations/widget/chart_horisontal.phtml</value>
+                        <label>nToklo Grid Template</label>
+                    </landscape>
+                </values>
+                <value>ntoklo/recommendations/widget/chart_vertical.phtml</value>
+            </template>
+        </parameters>
+    </ntoklo_recommendations_chart>
+</widgets>

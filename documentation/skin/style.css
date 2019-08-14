@@ -1,0 +1,11 @@
+.clearer {clear:both}
+body{font: 14px "museo-sans", sans-serif, Helvetica, Arial;color: #444;}
+a {color: #DD3F2B;text-decoration:none;}
+a:hover{text-decoration: underline;}
+#footer {margin-top:20px;margin-bottom:30px;border-top: 1px solid black;}
+h1 {font-size: 30px;line-height: 40px;}
+#main-container {margin: 0 auto 0 auto;width:1024px;}
+#header {margin-bottom:20px}
+#logo {float:left;}
+#address {float:right;margin-top:10px;}
+

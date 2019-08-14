@@ -1,0 +1,16 @@
+{
+    "name": "OpenMageModuleFostering/ntoklo_recommendations",
+    "type": "magento-module",
+    "license": "OSL-v3.0",
+    "homepage": "",
+    "description": "Displays personalised product recommendations and trending product charts through integration with nToklo for retail platform.",
+    "authors": [
+    {
+        "name": "nToklo",
+        "email": "dev@ntoklo.com"
+    }
+],
+    "suggest": {
+        "magento-hackathon/magento-composer-installer": "*"
+    }
+}

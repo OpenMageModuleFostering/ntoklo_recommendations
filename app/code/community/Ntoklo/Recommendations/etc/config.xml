@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * nToklo
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @category   Ntoklo
+ * @package    Ntoklo_Recommendations
+ * @copyright  Copyright (c) 2013 nToklo (http://ntoklo.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @author     nToklo
+ */
+-->
+<config>
+    <modules>
+        <Ntoklo_Recommendations>
+            <version>0.1.0</version>
+        </Ntoklo_Recommendations>
+    </modules>
+    <global>
+        <models>
+            <ntoklo_recommendations>
+                <class>Ntoklo_Recommendations_Model</class>
+            </ntoklo_recommendations>
+        </models>
+        <blocks>
+            <ntoklo_recommendations>
+                <class>Ntoklo_Recommendations_Block</class>
+            </ntoklo_recommendations>
+        </blocks>
+        <helpers>
+            <ntoklo_recommendations>
+                <class>Ntoklo_Recommendations_Helper</class>
+            </ntoklo_recommendations>
+        </helpers>
+    </global>
+    <frontend>
+        <translate>
+            <modules>
+                <ntoklo_recommendations>
+                    <files>
+                        <default>ntoklo_recommendations.csv</default>
+                    </files>
+                </ntoklo_recommendations>
+            </modules>
+        </translate>
+        <layout>
+            <updates>
+                <ntoklo_recommendations>
+                    <file>ntoklo_recommendations.xml</file>
+                </ntoklo_recommendations>
+            </updates>
+        </layout>
+        <events>
+            <controller_action_layout_render_before>
+                <observers>
+                    <ntoklo_recommendations>
+                        <type>singleton</type>
+                        <class>ntoklo_recommendations/observer</class>
+                        <method>processUniversalVariable</method>
+                    </ntoklo_recommendations>
+                </observers>
+            </controller_action_layout_render_before>
+            <wishlist_add_product>
+                <observers>
+                    <ntoklo_recommendations>
+                        <type>singleton</type>
+                        <class>ntoklo_recommendations/observer</class>
+                        <method>registerWishlistProduct</method>
+                    </ntoklo_recommendations>
+                </observers>
+            </wishlist_add_product>
+        </events>
+    </frontend>
+    <default>
+        <ntoklo_recommendations>
+            <settings>
+                <is_enabled>1</is_enabled>
+                <api_key></api_key>
+                <api_secret></api_secret>
+                <api_ssl_key></api_ssl_key>
+                <api_ssl_secret></api_ssl_secret>
+                <api_service_url><![CDATA[https://api.ntoklo.com]]></api_service_url>
+                <api_script_url><![CDATA[https://console.ntoklo.com/static/js/ntoklo.js]]></api_script_url>
+                <api_debug>false</api_debug>
+            </settings>
+        </ntoklo_recommendations>
+    </default>
+</config>

@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>nToklo Recommendations : readme</title>
+    <link rel="stylesheet" href="skin/style.css" type="text/css" />
+    <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+    <div id="main-container">
+        <div id="header">
+            <div id="logo">
+                <a href="http://www.ntoklo.com"><img src="skin/img/logo.png"/></a>
+            </div>
+            <div id="address">
+                1st Floor, 48 Warwick Street<br/>
+                London, W1B 5NL, United Kingdom<br/>
+                T: +44 (0) 20 7747 1080<br/>
+                F: +44 (0) 20 7747 1010<br/>
+                Email: <a href="mailto:support@ntoklo.com">support@ntoklo.com</a><br/>
+            </div>
+            <div class="clearer"></div>
+        </div>
+        <div id="main">
+            <br/><br/>
+	        <h1>nToklo Recommendations</h1>
+            <h1>Table of Contents</h1>
+            <ol>
+                <li><a href="#description">Description</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#installation">Installation</a></li>
+                <li><a href="#configuration">Configuration</a></li>
+                <li><a href="#widgets">Widgets</a></li>
+                <li><a href="#widget-options">Widget Options</a></li>
+            </ol>
+
+
+            <h1 id="description">Description</h1>
+            <strong>Version 0.1.0</strong>
+            <br/><br/>
+            Magento Connect extension page: <a href="http://www.magentocommerce.com/magento-connect/ntoklo-recommendations.html">http://www.magentocommerce.com/magento-connect/ntoklo-recommendations.html</a>
+            <p>Displays personalised product recommendations and trending product charts through integration with nToklo for retail platform.</p>
+
+            <h1 id="features">Features</h1>
+            <ul>
+                <li>Seamlessly Integrates with nToklo for retail recommendations API’s.</li>
+                <li>Uses the Open Data Alliance Universal Variable - Generats UniversalVariable JSON object and submits it to nToklo for processing to leverage user behaviour.</li>
+                <li>Utilises native Magento widgets to render personalised product recommendations and trending product charts through nToklo API’s.</li>
+                <li>Integrates with your store CMS to account for product categories.</li>
+            </ul>
+
+            <h1 id="installation">Installation</h1>
+
+            <p><strong>Backup your data</strong></p>
+            <p>Backup the database and your store's web directory.</p>
+
+            <p><strong>Disable Compilation</strong></p>
+            <p>This step is for Magento 1.4+ versions. If you are running an older version, this step can be skipped. In the Magento admin panel, go to System->Tools->Compilation.
+            In case "Compiler Status" is "Enabled", click on the "Disable" button (in case the status is disabled you can skip this step): </p>
+            <img src="skin/img/disablec1.png"/>
+
+            <p>This screen should now look like this:</p>
+            <img src="skin/img/disablec2.png"/>
+
+            <p><strong>Download and Extract</strong></p>
+            <p>Download and extract (unzip) the extension's contents on you computer. Navigate inside the extracted folder.</p>
+
+            <p><strong>Upload files</strong></p>
+            <p>Using a FTP client, upload the content of the extension directory to the store's document root, so that the app directory in
+            the extension folder overwrites the app directory on the server. If asked to replace any files, select "Yes".</p>
+
+            <p><strong>Clear the cache</strong></p>
+            <p>In the Magento admin panel, go to <b>System -> Cache Management</b> and press the "Flush Magento Cache" button:</p>
+            <img src="skin/img/cc.png"/>
+
+
+            <h1 id="configuration">Configuration</h1>
+            <p>You will need an nToklo account.</p>
+            <p>After successfully installing the extension, go to <a href="http://console.ntoklo.com/register">http://console.ntoklo.com/register</a> and register an account if you don’t already have one. From within your console, create an application using your store domain name.<br />
+               When entering the domain of your application, do not put the http:// or trailing path. For example, if your store url is http://mydomain.com/store. Simply enter the domain mydomain.com</p>
+            <p>Navigate to <b>Admin -> System -> Configuration -> nToklo</b>.
+                <ul>
+                    <li><b>Enabled</b> - Turn this on to send the UniversalVariable object to nToklo and also allow widgets to display on pages.</li>
+                    <li><b>Api Key</b> - The API key of the application you registered in your nToklo console (<a href="http://console.ntoklo.com">http://console.ntoklo.com</a>)</li>
+                    <li><b>Api Secret</b> - This can be found along with the API Key in the nToklo console for your application. (<a href="http://console.ntoklo.com">http://console.ntoklo.com</a>)</li>
+                </ul>
+            </p>
+            <img src="skin/img/config.png"/>
+
+            <h1 id="widgets">Widgets</h1>
+            <p>Displaying the product recommendations or trending product chart requires you to configure nToklo widgets on the pages you select.<br/><br />
+               Navigate to <b>Admin -> CMS -> Widgets</b> and choose "Add New Widget Instance".<br /><br />
+               Select Type nToklo.</p>
+            <img src="skin/img/widgets_1.png"/>
+
+            <br />
+            <p>Under "Frontend Properties" choose the appropriate store and theme. Under Layout Updates define the pages/regions where you need your widgets to be placed<br /><br />
+                Choosing <b>Template</b> under <b>Layout Updates</b>:
+                <ol>
+                    <li>nToklo Column Template - use it to place the widget under left / right column regions.</li>
+                    <li>nToklo Grid Template - use it to place the widget wider spaces like Main Content Area.</li>
+                </ol>
+            </p>
+            <img src="skin/img/widgets_2.png"/>
+
+            <h1 id="widget-options">Widget Options</h1>
+            <p>Here you can chose what type of widget you would like and how it should behave.</p>
+            <img src="skin/img/widgets_4.png"/>
+
+            <br />
+            <p>Options:
+            <ul>
+                <li><b>Widget type</b>:
+                    <ul>
+                        <li>Recommendations - Select this option to present personalized product recommendations in the widget. Where the user is anonymous the best option recommendations will be served. Where available, item context like the product category is used. So recommendations on product / category pages will be scoped appropriately.</li>
+                        <li>Trending product chart - this widget type is non-personalized as it provides a billboard type chart of products. Items in the widget are numbered numerically. Where available, item context like the product category is used. So charts on product / category pages will be scoped appropriately. You may select a daily or weekly chart.</li>
+                    </ul>
+                </li>
+                <li><b>Header</b>: - the widget title.</li>
+                <li><b>Time Window</b>: - option only available for "Charts". The option specifies whether to show a daily, i.e. the trending products from yesterday, or, weekly chart, i.e. the trending products from last week. A week is taken as the last 7 days, i.e. it’s a rolling week.</li>
+                <li><b>Max Products</b>: - The maximum number of products to show in the widget.</li>
+                <li><b>Column count</b>: - this defines the number of columns to be displayed when using the "nToklo Grid Template" in the Widget Properties tab.</li>
+                <li><b>Cache lifetime</b>: - allows you to define the refresh interval. 86400 is the default Magento cache lifetime.</li>
+            </ul>
+            </p>
+            <img src="skin/img/widgets_3.png"/>
+        </div>
+
+        <div id="footer">
+            &copy; <a href="http://www.ntoklo.com/">nToklo</a>
+        </div>
+    </div>
+</body>
+</html>
