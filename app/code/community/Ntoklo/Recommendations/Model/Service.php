@@ -142,9 +142,9 @@ class Ntoklo_Recommendations_Model_Service extends Mage_Core_Model_Abstract {
         $response = $this->_apiCall($chart->getData('widget_type'), $this->getServiceParams($chart));
 
         switch ($chart->getData('widget_type')) {
-            case self::CALL_METHOD_CHART:   
+            case self::CALL_METHOD_CHART:
                 foreach ($response['items'] as $item) {
-                    
+
                 Mage::helper('ntoklo_recommendations')->setTrackerId($response['tracker_id'], $chart->getData('widget_type'));
                     if (array_key_exists('product', $item) && array_key_exists('id', $item['product'])) {
                         $ids[] = $item['product']['id'];
@@ -207,20 +207,17 @@ class Ntoklo_Recommendations_Model_Service extends Mage_Core_Model_Abstract {
 
         if ($chart->getData('widget_type') == self::CALL_METHOD_RECOMMENDATIONS) {
             // Required Params
-            if ($userId = Mage::helper('ntoklo_recommendations')->getNtokloUserId()) {
+            if (Mage::helper('ntoklo_recommendations')->getNtokloUserId() != false) {
+
+                $userId = Mage::helper('ntoklo_recommendations')->getNtokloUserId();
                 $serviceParams['userId'] = $userId;
-            }
-            if ($product = Mage::registry('current_product')) {
-                $serviceParams['productId'] = $product->getId();
+            }else{
+                $sessionId = Mage::helper('ntoklo_recommendations')->getNtokloSessionId();
+                $serviceParams['userId'] = $sessionId;
             }
 
-            // Optional Params
-            if ($pageCategory) {
-                $serviceParams['pageCategory'] = $pageCategory;
-            }
-            if ($pageCategory == Ntoklo_Recommendations_Helper_Data::PAGE_CATEGORY_CATEGORY ||
-                $pageCategory == Ntoklo_Recommendations_Helper_Data::PAGE_CATEGORY_PRODUCT) {
-                $serviceParams['pageSubcategory'] = Mage::helper('ntoklo_recommendations/data')->getCategoryPath();
+            if ($product = Mage::registry('current_product')) {
+                $serviceParams['productId'] = $product->getId();
             }
         }
         else {
@@ -229,7 +226,6 @@ class Ntoklo_Recommendations_Model_Service extends Mage_Core_Model_Abstract {
                 $timestamp = strtotime($chart->getData('start_date'));
                 $serviceParams['date']  = mktime(0, 0, 0, date('m', $timestamp), date('d', $timestamp), date('Y', $timestamp)). '000';
             }
-
 
             //$serviceParams['action']    = Mage::helper('ntoklo_recommendations/data')->getEventType($pageCategory);
             $serviceParams['tw']        = $chart->getData('time_window');

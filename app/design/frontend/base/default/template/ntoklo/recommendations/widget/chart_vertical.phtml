@@ -23,7 +23,7 @@ $getTrackerId = Mage::helper('ntoklo_recommendations')->getWidgetType();
     <!-- nToklo Chart -->
     <div class="widget-ntoklo-container clearfix" style="clear:both">
         <div class="nt_wrapper nt_column nt_green nt_img_above">
-            <p class="nt_header" style=" background-color: <?php echo $this->getWidgetColor() ?> "><?php echo $this->getHeader() ?></p>
+            <p class="nt_header"><?php echo $this->getHeader() ?></p>
             <ul class="nt_widget">
                 <?php $i=0; foreach ($_products as $_item):?>
                     <li>
@@ -33,14 +33,14 @@ $getTrackerId = Mage::helper('ntoklo_recommendations')->getWidgetType();
                             </div>
                             <div class="nt_info_wrap">
                                 <span class="nt_product_title"><?php echo $this->htmlEscape($_item->getName()) ?></span>
-                                <span  style="color: <?php echo $this->getWidgetColor() ?>" class="nt_product_price"><?php echo Mage::helper('core')->currency($_item->getFinalPrice()); ?></span>
+                                <span  style="color: <?php echo $this->getWidgetColor() ?>" class="nt_product_price"><?php echo Mage::helper('core')->currency(Mage::helper('tax')->getPrice($_item, $_item->getFinalPrice())); ?></span>
                                 <a style=" background-color: <?php echo $this->getWidgetColor() ?>" href="<?php echo Mage::getUrl($_item->getUrlPath(), array('_query'=>array($getTrackerId =>  Mage::helper('ntoklo_recommendations')->getTrackerId())))?>" class="ntoklo_conversion nt_btn"><?php echo $this->__('More details') ?></a>
                             </div>
                         </div>
                     </li>
                 <?php endforeach ?>
             </ul>
-            
+
         </div>
     </div>
     <!-- //END nToklo Chart -->
