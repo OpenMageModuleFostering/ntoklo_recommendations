@@ -20,7 +20,7 @@
 class Ntoklo_Recommendations_Block_Chart extends Mage_Catalog_Block_Product_Abstract implements Mage_Widget_Block_Interface {
 
     /** @var $_items */
-    protected $_items = null;
+    protected $_items = array();
 
     /**
      * Initialize block's cache
@@ -29,7 +29,7 @@ class Ntoklo_Recommendations_Block_Chart extends Mage_Catalog_Block_Product_Abst
         parent::_construct();
         $this->addData(array(
             'cache_lifetime'    => 86400,
-            'cache_tags'        => array(Mage_Catalog_Model_Product::CACHE_TAG),
+            'cache_tags'        => array(Mage_Catalog_Model_Product::CACHE_TAG)
         ));
     }
 
@@ -40,6 +40,7 @@ class Ntoklo_Recommendations_Block_Chart extends Mage_Catalog_Block_Product_Abst
      * @return array
      */
     public function getCacheKeyInfo() {
+        $product = $this->getProduct();
         return array(
             'CATALOG_PRODUCT_NTOKLO_RECOMMENDATIONS',
             Mage::app()->getStore()->getId(),
@@ -47,7 +48,8 @@ class Ntoklo_Recommendations_Block_Chart extends Mage_Catalog_Block_Product_Abst
             Mage::getDesign()->getTheme('template'),
             Mage::getSingleton('customer/session')->getCustomerGroupId(),
             'template' => $this->getTemplate(),
-            Mage::getSingleton('customer/session')->getID()
+            Mage::getSingleton('customer/session')->getID(),
+            'product_id' => $product ? $product->getId() : ""
         );
     }
 
@@ -57,6 +59,8 @@ class Ntoklo_Recommendations_Block_Chart extends Mage_Catalog_Block_Product_Abst
      * @return $this
      */
     private function _prepareData() {
+        $itemIds = array();
+
         // Check if feature is enabled
         if (!Mage::getStoreConfig(Ntoklo_Recommendations_Helper_Data::CONFIG_XPATH_IS_ENABLED)) {
             return $this;
@@ -82,7 +86,37 @@ class Ntoklo_Recommendations_Block_Chart extends Mage_Catalog_Block_Product_Abst
 
         Mage::getModel('cataloginventory/stock')->addInStockFilterToCollection($collection);
 
-        $this->_items = $collection->getItems();
+        // Load parent product if possible if product is not visible individually
+        /** @var $item Mage_Catalog_Model_Product */
+        foreach ($collection->getItems() as $item) {
+            if (!$item->isSaleable()) {
+                continue;
+            }
+            if ($item->getVisibility() != Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE) {
+                if (!in_array($item->getId(), $itemIds)) {
+                    $itemIds[] = $item->getId();
+                    $this->_items[] = $item;
+                }
+            } else {
+                $parentIds = Mage::getResourceSingleton('catalog/product_type_configurable')->getParentIdsByChild($item->getId());
+
+                if (!isset($parentIds[0])) {
+                    $parentIds = Mage::getSingleton('bundle/product_type')->getParentIdsByChild($item->getId());
+                }
+                if (!isset($parentIds[0])) {
+                    $parentIds = Mage::getResourceSingleton('catalog/product_type_grouped')->getParentIdsByChild($item->getId());
+                }
+
+                if (isset($parentIds[0])) {
+                    $item = Mage::getModel('catalog/product')->load($parentIds[0]);
+                    if (!in_array($item->getId(), $itemIds)) {
+                        $itemIds[] = $item->getId();
+                        $this->_items[] = $item;
+                    }
+                }
+            }
+        }
+
         return $this;
     }
 

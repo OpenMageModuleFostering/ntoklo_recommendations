@@ -24,7 +24,6 @@
     var _ntoklo_host         = "<?php echo $this->getNtokloApiServiceUrl(); ?>";
     var _ntoklo_event_rate   = "<?php echo Ntoklo_Recommendations_Helper_Data::PAGE_CATEGORY_RATE; ?>";
     var _ntoklo_event_review = "<?php echo Ntoklo_Recommendations_Helper_Data::PAGE_CATEGORY_REVIEW; ?>";
-
     Event.observe(window, 'load', function(){
         window.universal_variable = window.universal_variable || {};
         var _ntoklo = new Ntoklo("<?php echo $this->getNtokloScriptUrl(); ?>", (<?php echo $this->getJsonUniversalVariable(); ?>));

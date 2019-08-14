@@ -27,21 +27,24 @@ class Ntoklo_Recommendations_Helper_Data extends Mage_Core_Helper_Abstract {
     const CONFIG_XPATH_IS_ENABLED       = 'ntoklo_recommendations/settings/is_enabled';
     const CONFIG_XPATH_API_KEY          = 'ntoklo_recommendations/settings/api_key';
     const CONFIG_XPATH_API_SECRET       = 'ntoklo_recommendations/settings/api_secret';
+    const CONFIG_XPATH_ACTIVATION_CODE  = 'ntoklo_recommendations/settings/activation_code';
     const CONFIG_XPATH_API_SSL_KEY      = 'ntoklo_recommendations/settings/api_ssl_key';
     const CONFIG_XPATH_API_SSL_SECRET   = 'ntoklo_recommendations/settings/api_ssl_secret';
     const CONFIG_XPATH_API_SERVICE_URL  = 'ntoklo_recommendations/settings/api_service_url';
     const CONFIG_XPATH_API_SCRIPT_URL   = 'ntoklo_recommendations/settings/api_script_url';
     const CONFIG_XPATH_API_DEBUG        = 'ntoklo_recommendations/settings/api_debug';
+    const CONFIG_XPATH_WIDGET_INIT      = 'ntoklo_recommendations/settings/widget_init';
 
 
     /**
      * Page types as defined in nToklo API
      */
-    const PAGE_CATEGORY_PRODUCT         = 'product';
-    const PAGE_CATEGORY_CONFIRMATION    = 'confirmation';
-    const PAGE_CATEGORY_RATE            = 'rate';
-    const PAGE_CATEGORY_REVIEW          = 'review';
-    const PAGE_CATEGORY_WISHLIST        = 'wishlist';
+    const PAGE_CATEGORY_CONVERSION_FUNNEL 	= 'conversion_funnel'; 
+    const PAGE_CATEGORY_PRODUCT         	= 'product';
+    const PAGE_CATEGORY_CONFIRMATION    	= 'confirmation';
+    const PAGE_CATEGORY_RATE            	= 'rate';
+    const PAGE_CATEGORY_REVIEW          	= 'review';
+    const PAGE_CATEGORY_WISHLIST        	= 'wishlist';
 
     /**
      * Page types other than defined in nToklo API
@@ -53,11 +56,19 @@ class Ntoklo_Recommendations_Helper_Data extends Mage_Core_Helper_Abstract {
     const PAGE_CATEGORY_BASKET          = 'basket';
     const PAGE_CATEGORY_CHECKOUT        = 'checkout';
 
+
+    const NEW_WIDGETS_MAGENTO_VERSION   = 1.6;
     /**
      * Cookie vars
      */
     const COOKIE_KEY_CONVERSION         = 'ntoklo_conversion';
 
+    /**
+     * Contains API Key and API Secret
+     */
+    private $_activationCode;
+
+    private $_usesNewWidgets;
 
     /**
      * @return bool
@@ -74,17 +85,45 @@ class Ntoklo_Recommendations_Helper_Data extends Mage_Core_Helper_Abstract {
     }
 
     /**
+     * @return bool
+     */
+    public function needsWidget() {
+        return !(bool)Mage::getStoreConfig(self::CONFIG_XPATH_WIDGET_INIT);
+    }
+
+    public function setWidgetCreated() {
+        $this->_setConfig(self::CONFIG_XPATH_WIDGET_INIT, true);
+    }
+
+    public function usesNewWidgets() {
+        if (!isset($this->_usesNewWidgets)) {
+            $this->_usesNewWidgets = floatval(preg_replace('/^(\d\.\d).*/', "$1", Mage::getVersion())) >= self::NEW_WIDGETS_MAGENTO_VERSION;
+        }
+        return $this->_usesNewWidgets;
+    }
+
+    /**
      * @return mixed
      */
     public function getNtokloApiKey() {
-        return Mage::getStoreConfig(self::CONFIG_XPATH_API_KEY);
+        return $this->_getApiSecret() ? $this->_getApiSecret()->{'key'} : "";
     }
 
     /**
      * @return mixed
      */
     public function getNtokloSecretKey() {
-        return Mage::getStoreConfig(self::CONFIG_XPATH_API_SECRET);
+        return $this->_getApiSecret() ? $this->_getApiSecret()->{'secret'} : "";
+    }
+    
+    /**
+     * @return mixed
+     */
+    private function _getApiSecret() {
+        if (!$this->_activationCode) {
+            $this->_activationCode = json_decode(Mage::getStoreConfig(self::CONFIG_XPATH_ACTIVATION_CODE));
+        }
+        return $this->_activationCode;
     }
 
     /**
@@ -234,7 +273,15 @@ class Ntoklo_Recommendations_Helper_Data extends Mage_Core_Helper_Abstract {
         ));
 
         if ($userId = $this->getNtokloUserId()) {
-            $object->setProperties(array('user_id' => $userId));
+        	$visitorId = $this->getNtokloSessionId();
+            $object->setProperties(array(
+            		'user_id' => $userId,
+            		'visitor_id' => $visitorId
+			));
+        }elseif($visitorId = $this->getNtokloSessionId()){
+        	$object->setProperties(array(
+            		'visitor_id' => $visitorId
+			));
         }
 
         // Name
@@ -290,19 +337,8 @@ class Ntoklo_Recommendations_Helper_Data extends Mage_Core_Helper_Abstract {
      * @return Ntoklo_Recommendations_Model_UniversalVariable
      */
     public function getUvMapListing() {
-
         $object = false;
-
-        // Build Items part - category context
         $items = array();
-        /** @var $category Mage_Catalog_Model_Category */
-        $category = Mage::registry('current_category');
-        if ($category && !Mage::registry('current_product')) {
-            foreach ($category->getProductCollection() as $product) {
-                $product = $product->load($product->getId());
-                array_push($items, $this->getUvMapProduct($product));
-            }
-        }
 
         /** @var Mage_Admin_Model_Session $session */
         $session = Mage::getSingleton('customer/session');
@@ -332,7 +368,6 @@ class Ntoklo_Recommendations_Helper_Data extends Mage_Core_Helper_Abstract {
         if (!empty($query)) {
             /** @var $listBlock Mage_Catalog_Block_Product_List */
             $listBlock = Mage::app()->getLayout()->getBlockSingleton('catalog/product_list');
-
             foreach ($listBlock->getLoadedProductCollection() as $product) {
                 array_push($items, $this->getUvMapProduct($product));
             }
@@ -373,6 +408,7 @@ class Ntoklo_Recommendations_Helper_Data extends Mage_Core_Helper_Abstract {
             'id'            => $product->getId(),
             'sku_code'      => $product->getSku(),
             'url'           => $product->getProductUrl(),
+            'image_url'     => $product->getImageUrl(),
             'name'          => $product->getName(),
             'unit_price'        => (float) $product->getPrice(),
             'unit_sale_price'   => (float) $product->getFinalPrice(),
@@ -452,7 +488,7 @@ class Ntoklo_Recommendations_Helper_Data extends Mage_Core_Helper_Abstract {
                     'product'        => $this->getUvMapProduct(Mage::getModel('catalog/product')->load($item->getProductId())),
                     'subtotal'       => (float) $item->getRowTotalInclTax(),
                     'total_discount' => (float) $item->getDiscountAmount(),
-                    'quantity'       => ($this->getPageCategory() == self::PAGE_CATEGORY_BASKET) ? (float)$item->getQtyOrdered() : (float)$item->getQty(),
+                    'quantity'       => ($this->getPageCategory() == self::PAGE_CATEGORY_CONFIRMATION) ? (float)$item->getQtyOrdered() : (float)$item->getQty(),
             )));
         }
         return $object;
@@ -540,21 +576,38 @@ class Ntoklo_Recommendations_Helper_Data extends Mage_Core_Helper_Abstract {
      * @return string
      */
     public function getNtokloUserId() {
-
-       // Commented out as request to turn off the VisitorId usage: 26th April phone conversation.
-       // /** @var Mage_Log_Model_Visitor $visitor */
-       // $visitor = Mage::getSingleton('log/visitor');
-       // if ($visitor->getVisitorId()) {
-       //     return $visitor->getVisitorId();
-       // }
-
         /** @var Mage_Customer_Model_Customer $customer */
         $customer = Mage::helper('customer')->getCustomer();
-        if ($customer->getId()) {
+		
+	    if ($customer->getId()) {
             return $customer->getId();
+        }
+		
+        return false;
+    }
+	
+	/**
+     * When guest checkout is turn off get session/vistor id merge with user id
+     *
+     * @return string
+     */
+	
+	public function getNtokloSessionId(){
+		/** @var Mage_Log_Model_Visitor $visitor */
+        $visitor = Mage::getSingleton('log/visitor');
+			
+		if ($visitor->getVisitorId()) {
+            return $visitor->getVisitorId();
         }
 
         return false;
+	}
+
+    private function _setConfig($path, $value) {
+        Mage::getModel('core/config')->saveConfig($path, $value );
     }
 
+    public function getExtensionVersion() {
+        return (string) $modules = Mage::getConfig()->getNode()->modules->Ntoklo_Recommendations->version;
+    }
 }

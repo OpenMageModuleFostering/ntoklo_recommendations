@@ -43,6 +43,7 @@
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
+                    
                     <fields>
                         <is_enabled translate="label">
                             <label>Enabled</label>
@@ -52,66 +53,25 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment><![CDATA[Enable/Disable event submission to nToklo service. This switch also disables all "nToklo" widgets from been displayed.]]></comment>
+                            <comment><![CDATA[Enable/Disable event submission to nToklo service. This switch also disables all "nToklo" widgets from being displayed.]]></comment>
                         </is_enabled>
-
-                        <!--<auth_separator>-->
-                            <!--<label>API Authentication</label>-->
-                            <!--<sort_order>20</sort_order>-->
-                            <!--<frontend_model>adminhtml/system_config_form_field_heading</frontend_model>-->
-                            <!--<show_in_default>1</show_in_default>-->
-                            <!--<show_in_website>1</show_in_website>-->
-                            <!--<show_in_store>1</show_in_store>-->
-                        <!--</auth_separator>-->
-                        <api_key translate="label">
-                            <label>Api Key</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>30</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <comment><![CDATA[Your API Key from nToklo Console.]]></comment>
-                        </api_key>
-                        <api_secret translate="label">
-                            <label>Api Secret</label>
-                            <frontend_type>text</frontend_type>
-                            <!--<frontend_type>obscure</frontend_type>-->
-                            <!--<backend_model>adminhtml/system_config_backend_encrypted</backend_model>-->
+                        <activation_code translate="label">
+                            <label>Activation code</label>
+                            <frontend_type>textarea</frontend_type>
                             <sort_order>40</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment><![CDATA[Your API Secret from nToklo Console.]]></comment>
-                        </api_secret>
-
-                        <!--<advanced_separator>-->
-                            <!--<label>Advanced Configuration</label>-->
-                            <!--<sort_order>50</sort_order>-->
-                            <!--<frontend_model>adminhtml/system_config_form_field_heading</frontend_model>-->
-                            <!--<show_in_default>1</show_in_default>-->
-                            <!--<show_in_website>1</show_in_website>-->
-                            <!--<show_in_store>1</show_in_store>-->
-                        <!--</advanced_separator>-->
-
-                        <!-- Commented out per Paolo's request 21 May 2013 -->
-                        <!--<api_service_url translate="label">-->
-                            <!--<label>Api Service URL</label>-->
-                            <!--<frontend_type>text</frontend_type>-->
-                            <!--<sort_order>60</sort_order>-->
-                            <!--<show_in_default>1</show_in_default>-->
-                            <!--<show_in_website>1</show_in_website>-->
-                            <!--<show_in_store>1</show_in_store>-->
-                            <!--<comment><![CDATA[nToklo API Service endpoint.]]></comment>-->
-                        <!--</api_service_url>-->
-                        <!--<api_script_url translate="label">-->
-                            <!--<label>Api Script URL</label>-->
-                            <!--<frontend_type>text</frontend_type>-->
-                            <!--<sort_order>70</sort_order>-->
-                            <!--<show_in_default>1</show_in_default>-->
-                            <!--<show_in_website>1</show_in_website>-->
-                            <!--<show_in_store>1</show_in_store>-->
-                            <!--<comment><![CDATA[nToklo js script location]]></comment>-->
-                        <!--</api_script_url>-->
+                            <comment><![CDATA[Your activation code from nToklo Console.<br />Example: {"key":"ABCD","secret":"12345"}]]></comment>
+                        </activation_code>
+                        <registration>
+                            <label>Need activation code?</label>
+                            <frontend_model>ntoklo_recommendations/adminhtml_system_config_form_field_registration</frontend_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </registration>
                     </fields>
                 </settings>
             </groups>

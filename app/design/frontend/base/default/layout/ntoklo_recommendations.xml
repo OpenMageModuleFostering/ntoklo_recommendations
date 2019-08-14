@@ -21,7 +21,8 @@
     <default>
         <reference name="head">
             <action method="addItem"><type>js</type><name>ntoklo/util.js</name></action>
-            <action method="addCss"><stylesheet>css/ntoklo/widgets.css</stylesheet></action>
+            <action method="addCss"><stylesheet>css/ntoklo/global.css</stylesheet></action>
+            <action method="addCss"><stylesheet>css/ntoklo/widget.css</stylesheet></action>
         </reference>
     </default>
 </layout>

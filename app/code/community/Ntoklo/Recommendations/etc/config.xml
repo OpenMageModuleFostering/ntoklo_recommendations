@@ -20,7 +20,7 @@
 <config>
     <modules>
         <Ntoklo_Recommendations>
-            <version>0.1.0</version>
+            <version>1.0.4</version>
         </Ntoklo_Recommendations>
     </modules>
     <global>
@@ -39,6 +39,17 @@
                 <class>Ntoklo_Recommendations_Helper</class>
             </ntoklo_recommendations>
         </helpers>
+        <resources>
+            <ntoklo_setup>
+                <setup>
+                    <module>Ntoklo_Recommendations</module>
+                    <class>Ntoklo_Recommendations_Model_Resource_Mysql4_Setup</class>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </ntoklo_setup>
+        </resources>
     </global>
     <frontend>
         <translate>
@@ -78,6 +89,19 @@
             </wishlist_add_product>
         </events>
     </frontend>
+    <adminhtml>
+        <events>
+            <admin_system_config_changed_section_ntoklo_recommendations>
+                <observers>
+                    <ntoklo_recommendations>
+                        <type>singleton</type>
+                        <class>ntoklo_recommendations/observer</class>
+                        <method>initWidget</method>
+                    </ntoklo_recommendations>
+                </observers>
+            </admin_system_config_changed_section_ntoklo_recommendations>
+        </events>
+    </adminhtml>
     <default>
         <ntoklo_recommendations>
             <settings>

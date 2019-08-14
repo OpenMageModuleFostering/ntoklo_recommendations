@@ -47,4 +47,3 @@ class Ntoklo_Recommendations_Block_Adminhtml_Widget_Date_Helper extends Mage_Adm
         return $date->getElementHtml();
     }
 }
-
