@@ -34,24 +34,6 @@ var Ntoklo = Class.create({
                     'type': 'text/javascript',
                     'async': true,
                     'id': 'ntoklo_js'};
-
-        // register recommended clickEvent
-        var ntoklo = this;
-        $$('.ntoklo_conversion').each(function(elem){
-            $(elem).observe('click', function(){
-                ntoklo.clickEvent('conversion');
-            });
-        });
-
-//        //register rate clickEvent
-//        if ($('review-form')) {
-//            $('review-form').observe('submit', function(event){
-//                if (!event.stopped) {
-//                    event.preventDefault();
-//                    ntoklo.clickEvent('review');
-//                }
-//            });
-//        }
     },
 
     typeOf: function(value) {
@@ -107,34 +89,9 @@ var Ntoklo = Class.create({
         }
     },
 
-    setConversion: function() {
-        var pagesource = window.universal_variable.page;
-        document.cookie = "ntoklo_conversion=" + JSON.stringify(pagesource)+ "; path="+ Mage.Cookies.path+ "; domain = "+ Mage.Cookies.domain+ "";
-    },
-
+ 
     loadEvent: function() {
         window.universal_variable = this.mergeUv();
         this.submitUv();
-    },
-
-    clickEvent: function(event_type) {
-        if (!event_type) {
-            return false;
-        }
-        window.universal_variable = this.mergeUv();
-        switch (event_type) {
-            case 'review':
-                window.universal_variable.events.items = new Array({'type' : _ntoklo_event_rate}, {'type' : _ntoklo_event_review});
-                this.submitUv(this.reviewCallback);
-                break;
-            case 'conversion':
-                this.setConversion();
-                break;
-        }
-        return true;
-    },
-
-    reviewCallback: function() {
-        $('review-form').submit();
     }
 });

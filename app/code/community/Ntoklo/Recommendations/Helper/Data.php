@@ -69,6 +69,13 @@ class Ntoklo_Recommendations_Helper_Data extends Mage_Core_Helper_Abstract {
     private $_activationCode;
 
     private $_usesNewWidgets;
+	
+	/**
+	 * Contains Tracker_id
+	 */
+	 
+	private $tracker_id 	= null; 
+	private $widget_type 	= null;
 
     /**
      * @return bool
@@ -237,19 +244,45 @@ class Ntoklo_Recommendations_Helper_Data extends Mage_Core_Helper_Abstract {
         } else {
             // Regular page category events
             $item   = new Ntoklo_Recommendations_Model_UniversalVariable(array(
-                'type' => Mage::helper('ntoklo_recommendations')->getEventType($this->getPageCategory())
+            	'category' => self::PAGE_CATEGORY_CONVERSION_FUNNEL,
+                'action' => Mage::helper('ntoklo_recommendations')->getEventType($this->getPageCategory())
             ));
-
+				
+	array_push($object, $item);
+	
+	
+	
+	
+       
+            $tracker_id = Mage::helper('ntoklo_recommendations')->getTrackerId();
             // Recommendation click events
-            if ($pagesource = Mage::getSingleton('core/cookie')->get(self::COOKIE_KEY_CONVERSION)) {
-
-                Mage::getSingleton('core/cookie')->delete(self::COOKIE_KEY_CONVERSION, null, null, false, false);
-                $item->setProperties(array('cause' => 'recommendation-click',
-                                           'pagesource' => json_decode($pagesource)));
-
+            if (!empty($_GET['nt_chrt'])) {
+               	array_push($object, new Ntoklo_Recommendations_Model_UniversalVariable(
+               		array('category' => 'clickthrough_goals',
+                          'action' => 'chart-click',
+			  'tracker_id' => $_GET['nt_chrt'] )));
+				
+		  			  
             }
-            array_push($object, $item);
-        }
+            
+            if (!empty($_GET['nt_rec'])) {
+               	array_push($object, new Ntoklo_Recommendations_Model_UniversalVariable(
+               		array('category' => 'clickthrough_goals',
+                          'action' => 'recommendation-click',
+			  'tracker_id' => $_GET['nt_rec'] )));
+				
+		  			  
+            }
+            
+            
+		if(!empty($tracker_id)){		            	
+	            	array_push($object, new Ntoklo_Recommendations_Model_UniversalVariable(
+	               		array('category' => 'clickthrough_goals',
+	                          'action' => $this->widget_type . '-impr',
+							  'tracker_id' => $tracker_id )));
+				}
+			}    
+      
 
         return $object;
     }
@@ -320,14 +353,16 @@ class Ntoklo_Recommendations_Helper_Data extends Mage_Core_Helper_Abstract {
      * @return Ntoklo_Recommendations_Model_UniversalVariable
      */
     public function getUvMapPage() {
+    	$object = array();
+		
         $pageCategory = $this->getPageCategory();
 
         $object = new Ntoklo_Recommendations_Model_UniversalVariable(array(
-            'category'  => $pageCategory
+            'type'  => $pageCategory
         ));
 
         if ($pageCategory == self::PAGE_CATEGORY_CATEGORY || $pageCategory == self::PAGE_CATEGORY_PRODUCT) {
-            $object->setProperties(array('subcategory' => $this->getCategoryPath()));
+            $object->breadcrumb = $this->getCategoryPath();			
         }
         return $object;
     }
@@ -362,6 +397,10 @@ class Ntoklo_Recommendations_Helper_Data extends Mage_Core_Helper_Abstract {
         if ($this->getPageCategory() == self::PAGE_CATEGORY_CATEGORY) {
             $query = $this->getCategoryPath();
         }
+        
+        
+        $pathCategory = $this->getCategoryPath();
+        $last = count($pathCategory) - 1;
 
         // Build Items part - search context
         // If it's a search result page than get the items from Search engine
@@ -369,7 +408,7 @@ class Ntoklo_Recommendations_Helper_Data extends Mage_Core_Helper_Abstract {
             /** @var $listBlock Mage_Catalog_Block_Product_List */
             $listBlock = Mage::app()->getLayout()->getBlockSingleton('catalog/product_list');
             foreach ($listBlock->getLoadedProductCollection() as $product) {
-                array_push($items, $this->getUvMapProduct($product));
+                array_push($items, $this->getUvMapProduct($product, $pathCategory[$last]));
             }
 
         }
@@ -388,7 +427,7 @@ class Ntoklo_Recommendations_Helper_Data extends Mage_Core_Helper_Abstract {
      * Creates the product UV object
      * @return Ntoklo_Recommendations_Model_UniversalVariable
      */
-    public function getUvMapProduct($product = false) {
+    public function getUvMapProduct($product = false, $category = false) {
 
         if (!$product) {
             $product = Mage::registry('current_product');
@@ -417,14 +456,18 @@ class Ntoklo_Recommendations_Helper_Data extends Mage_Core_Helper_Abstract {
             'stock'             => (int) Mage::getModel('cataloginventory/stock_item')->loadByProduct($product)->getQty()
         ));
 
-        $categoryNames = array();
-        if ($categories = $product->getCategoryIds()) {
-            foreach ($categories as $categoryId) {
-                array_push($categoryNames, strtolower(Mage::getModel('catalog/category')->load($categoryId)->getName()));
-            }
-        }
-        if (!empty($categoryNames)) {
-            $object->setProperties(array('category' => implode(', ', $categoryNames)));
+	if($category){
+		$object->setProperties(array('category' => $category ));
+	}else{
+	        $categoryNames = array();
+	        if ($categories = $product->getCategoryIds()) {
+	            foreach ($categories as $categoryId) {
+	                array_push($categoryNames, Mage::getModel('catalog/category')->load($categoryId)->getName());
+	            }
+	        }
+	        if (!empty($categoryNames)) {
+	            $object->setProperties(array('category' => implode(', ', $categoryNames)));
+	        }
         }
 
         return $object;
@@ -558,16 +601,14 @@ class Ntoklo_Recommendations_Helper_Data extends Mage_Core_Helper_Abstract {
      * @return string
      */
     public function getCategoryPath() {
-        $path = "";
-        $breadcrumbs  = Mage::helper('catalog')->getBreadcrumbPath();
-        if ($this->getPageCategory() == self::PAGE_CATEGORY_PRODUCT) {
-            array_pop($breadcrumbs);
+    
+        $breadcrumbs  = Mage::helper('catalog')->getBreadcrumbPath();  
+		
+		foreach ($breadcrumbs as $element) {
+            $label[] = $element['label'];
         }
-        foreach ($breadcrumbs as $element) {
-            $label = strtolower(str_replace('>', ' ', $element['label']));
-            $path .= ($path == '') ? $label : ' > '. $label;
-        }
-        return $path;
+		 
+        return $label;
     }
 
     /**
@@ -610,4 +651,26 @@ class Ntoklo_Recommendations_Helper_Data extends Mage_Core_Helper_Abstract {
     public function getExtensionVersion() {
         return (string) $modules = Mage::getConfig()->getNode()->modules->Ntoklo_Recommendations->version;
     }
+	
+	public function setTrackerId($tracker_id, $widget_type){
+	$this->tracker_id = $tracker_id;
+	$this->widget_type = $widget_type;
+	
+	}
+	
+	public function getTrackerId(){		
+	return $this->tracker_id;	
+	}
+	
+	public function getWidgetType(){
+	
+		if($this->widget_type == 'recommendation'){
+			return 'nt_rec';
+		}
+		
+		if($this->widget_type){
+			return 'nt_chrt';
+		}
+	
+	}	
 }

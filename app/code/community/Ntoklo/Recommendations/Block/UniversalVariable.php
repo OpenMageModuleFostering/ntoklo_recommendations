@@ -65,7 +65,7 @@ class Ntoklo_Recommendations_Block_UniversalVariable extends Mage_Core_Block_Tem
         $pageCategory = Mage::helper('ntoklo_recommendations')->getPageCategory();
 
         $universalVariable = new Ntoklo_Recommendations_Model_UniversalVariable(array(
-                'version'           => '1.1.1',
+                'version'           => '1.2',
                 'magento_version'   => Mage::getVersion(),
                 'ntoklo_version'    => Mage::helper('ntoklo_recommendations')->getExtensionVersion(),
                 'user'              => Mage::helper('ntoklo_recommendations')->getUvMapUser()
