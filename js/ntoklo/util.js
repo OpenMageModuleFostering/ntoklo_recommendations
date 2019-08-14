@@ -89,7 +89,7 @@ var Ntoklo = Class.create({
         }
     },
 
- 
+
     loadEvent: function() {
         window.universal_variable = this.mergeUv();
         this.submitUv();

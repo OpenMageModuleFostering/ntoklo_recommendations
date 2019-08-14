@@ -248,7 +248,7 @@ class Ntoklo_Recommendations_Helper_Data extends Mage_Core_Helper_Abstract {
                 'action' => Mage::helper('ntoklo_recommendations')->getEventType($this->getPageCategory())
             ));
 
-	array_push($object, $item);
+	       array_push($object, $item);
 
             $tracker_id = Mage::helper('ntoklo_recommendations')->getTrackerId();
             // Recommendation click events
@@ -452,15 +452,10 @@ class Ntoklo_Recommendations_Helper_Data extends Mage_Core_Helper_Abstract {
     		$object->setProperties(array('category' => strtolower($category)));
     	}else{
 
-            $categoryNames = array();
             if ($categories = $product->getCategoryIds()) {
-                foreach ($categories as $categoryId) {
-	                array_push($categoryNames, strtolower(Mage::getModel('catalog/category')->load($categoryId)->getName()));
-               }
-    	    }
-
-            if (!empty($categoryNames)) {
-                $object->setProperties(array('category' => end($categoryNames)));
+                $categoryId = end($categories);
+                $categoryNames = strtolower(Mage::getModel('catalog/category')->load($categoryId)->getName());
+                $object->setProperties(array('category' => $categoryNames));
 	        }
         }
 
@@ -476,6 +471,7 @@ class Ntoklo_Recommendations_Helper_Data extends Mage_Core_Helper_Abstract {
     public function getUvMapBasket() {
 
         $cart = Mage::getSingleton('checkout/session');
+
         if ($this->getPageCategory() == self::PAGE_CATEGORY_CHECKOUT) {
             $cart = Mage::getSingleton('checkout/session');
         }
@@ -521,9 +517,10 @@ class Ntoklo_Recommendations_Helper_Data extends Mage_Core_Helper_Abstract {
     private function _getUvMapLineItems($items) {
 
         $object = array();
+
         foreach ($items as $item) {
             array_push($object, new Ntoklo_Recommendations_Model_UniversalVariable(array(
-                    'product'        => $this->getUvMapProduct(Mage::getModel('catalog/product')->load($item->getProductId())),
+                    'product'        => $this->getUvMapProduct($item->getProduct()),
                     'subtotal'       => (float) $item->getRowTotalInclTax(),
                     'total_discount' => (float) $item->getDiscountAmount(),
                     'quantity'       => ($this->getPageCategory() == self::PAGE_CATEGORY_CONFIRMATION) ? (float)$item->getQtyOrdered() : (float)$item->getQty(),
